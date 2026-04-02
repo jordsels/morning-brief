@@ -1,6 +1,6 @@
 # Morning Brief
 
-A Claude Code prompt that generates a personalized daily HTML briefing by pulling from your connected tools (email, calendar, Slack, Substack, web search) and synthesizing everything into one scannable document.
+A prompt for [Claude Cowork](https://claude.ai/code) that generates a personalized daily HTML briefing by pulling from your connected tools (email, calendar, Slack, Substack, web search) and synthesizing everything into one scannable document.
 
 ## What it does
 
@@ -19,7 +19,7 @@ Every item is badged (Action / FYI / OK) so you can scan quickly.
 
 ## Prerequisites
 
-- [Claude Code](https://docs.anthropic.com/en/docs/claude-code) with access to web search
+- [Claude Cowork](https://claude.ai/code) (desktop app or web) with access to web search
 - One or more connected tools (see table below)
 
 ## Connected tools
@@ -28,26 +28,30 @@ The brief adapts to whatever tools you have configured. More tools = richer brie
 
 | Tool | What it adds | Setup |
 |------|-------------|-------|
-| Web search | Top stories, trends, weather forecasts | Built into Claude Code |
-| Gmail | Personal email highlights | Claude Code Gmail integration |
-| Google Calendar | Personal events, open time blocks | Claude Code Google Calendar integration |
+| Web search | Top stories, trends, weather forecasts | Built in |
+| Gmail | Personal email highlights | Claude Cowork integration |
+| Google Calendar | Personal events, open time blocks | Claude Cowork integration |
 | Outlook | Work email highlights | Access via Chrome browser automation |
-| Slack | Work message highlights | Claude Code Slack integration |
+| Slack | Work message highlights | Claude Cowork integration |
 | Teams | Work message highlights | Access via Chrome browser automation |
 | Substack MCP | Newsletter feed highlights | [substack-mcp](https://github.com/jordsels/substack-mcp) server |
 | iMessage | Personal message summary | Claude iMessage extension |
 
 ## Usage
 
-### One-off generation
+### As a skill (recommended)
 
-Open Claude Code and paste the contents of [`prompt.md`](prompt.md).
+Install `prompt.md` as a [Claude Cowork skill](https://docs.anthropic.com/en/docs/claude-code/skills) so you can invoke it with a slash command like `/morning-brief`. This is the cleanest way to use it regularly.
 
-### Scheduled daily brief
+### As a scheduled trigger
 
-Set up a [scheduled trigger](https://docs.anthropic.com/en/docs/claude-code/remote-triggers) to run the prompt automatically each morning.
+Set up a [scheduled trigger](https://docs.anthropic.com/en/docs/claude-code/remote-triggers) to run the prompt automatically each morning — wake up to a fresh brief.
 
-### Customization
+### One-off
+
+You can also just ask Claude Cowork to generate a morning brief and point it at `prompt.md` for the format spec.
+
+## Customization
 
 The prompt is designed to be adapted:
 
