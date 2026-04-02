@@ -55,7 +55,7 @@ You can also just ask Claude Cowork to generate a morning brief and point it at 
 
 Claude Cowork has native integrations for Gmail, Google Calendar, and Slack — but not for Outlook or Teams. To read work email and work calendar, the prompt uses the [Claude in Chrome](https://chromewebstore.google.com/detail/claude-in-chrome/) MCP extension to navigate to Outlook and Teams in your browser and read the page content directly.
 
-This works well as long as you're logged into Outlook and Teams in a Chrome profile that Claude in Chrome can access. The catch is that if your work and personal accounts use different Chrome profiles, Claude Cowork can only be signed into one at a time. There's an [open feature request](https://github.com/anthropics/claude-code/issues/18435) to support multiple account profiles in Claude Desktop, which would make managing work + personal contexts smoother.
+This works well as long as you're logged into Outlook and Teams in a Chrome profile that Claude in Chrome can access. The catch is that if your work and personal accounts use different Chrome profiles, Claude Cowork can only be signed into one at a time. There's an [open feature request](https://github.com/anthropics/claude-code/issues/18435) to support multiple account profiles in Claude Desktop, which would make managing work + personal contexts smoother. There's also a [feature request](https://github.com/anthropics/claude-code/issues/20469) to enable the Microsoft 365 connector for Max plan individual users, which would allow native Outlook and OneDrive access without browser automation.
 
 ## Customization
 
