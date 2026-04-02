@@ -51,6 +51,14 @@ Set up a [scheduled trigger](https://docs.anthropic.com/en/docs/claude-code/remo
 
 You can also just ask Claude Cowork to generate a morning brief and point it at `prompt.md` for the format spec.
 
+## Why Chrome browser automation for work tools?
+
+Claude Cowork has native integrations for Gmail, Google Calendar, and Slack — but not for Outlook or Teams. To read work email and work calendar, the prompt uses the [Claude in Chrome](https://chromewebstore.google.com/detail/claude-in-chrome/) MCP extension to navigate to Outlook and Teams in your browser and read the page content directly.
+
+This is a workaround. There's an [open feature request](https://github.com/anthropics/claude-code/issues/18435) to add native Outlook and Teams integrations to Claude Cowork. If those ship, you can swap out the Chrome automation steps for native MCP tools.
+
+In the meantime, Chrome automation works well as long as you're logged into Outlook and Teams in a Chrome profile that Claude in Chrome can access.
+
 ## Customization
 
 The prompt is designed to be adapted:
