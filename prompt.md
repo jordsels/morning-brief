@@ -1,126 +1,201 @@
 # Morning Brief Prompt
 
-Paste this prompt into Claude Code (or use it as a scheduled trigger) to generate a personalized daily HTML briefing.
+Install as a [Claude Cowork skill](https://docs.anthropic.com/en/docs/claude-code/skills), use as a [scheduled trigger](https://docs.anthropic.com/en/docs/claude-code/remote-triggers), or paste directly into a conversation.
+
+Before using, fill in the `[PLACEHOLDER]` fields in the "Who You Are" section with your own details. Remove any sections or tools you don't use.
 
 ---
 
 ## The Prompt
 
-Generate a morning brief as a single self-contained HTML file. The brief should be a personal daily briefing that synthesizes information from my connected tools and the web into one scannable document.
+Generate "[YOUR NAME]'s Morning Brief" — a personalized daily HTML report.
 
-### Output format
+### Who You Are
 
-- Single HTML file with inline CSS (no external dependencies)
-- Mobile-responsive (works on phone and desktop)
-- Clean, modern design with a dark header showing the title and today's date
-- Each section has a color-coded title bar and uses card-based layouts
-- Use a badge system for urgency: red "Action" badges for items needing a response, amber "FYI" badges for awareness items, and green "OK" badges for confirmed/completed items
+Fill in your details so the brief can tailor news relevance, calendar sources, and communication channels to you.
 
-### Sections
+```
+- Name: [YOUR NAME]
+- Location: [CITY, STATE ZIP]
+- Timezone: [YOUR TIMEZONE]
+- Phone: [YOUR PHONE NUMBER] (for optional iMessage notification)
+- Personal email: [YOUR PERSONAL EMAIL]
+- Work email: [YOUR WORK EMAIL]
+- Work: [YOUR ROLE at YOUR COMPANY — what you do, current projects]
+- Side Projects: [ANY SIDE PROJECTS — apps, businesses, research]
+- Interests: [TOPICS YOU FOLLOW — fitness, industry trends, hobbies]
+- Personal: [ANYTHING ELSE RELEVANT — family, community involvement, long-term goals]
+```
 
-Build the brief with these sections in order:
+### STEP 1: News + Substack (7 web searches + feed)
 
-**A — Top Stories** (red accent)
-- Use **web search** to find 2-4 major news stories relevant to my industry, role, and interests
-- Each story gets a full-width card with: emoji icon, headline, 2-3 sentence summary, "Why it matters to you" line connecting it to my work or projects, and an italicized action/talking point
-- Prioritize stories I can act on or that affect my work this week
+Search these topics and collect 3-5 items each:
 
-**B — On My Radar** (blue accent)
-- Use **web search** to find 4-6 professional/industry articles, product updates, or developments worth knowing about
-- Display as a 2-column scannable grid of small cards, each with: emoji, linked headline, and one-line summary explaining relevance
-- These are less urgent than Top Stories — more "worth skimming" items
+1. Breaking / top news (US + world)
+2. [YOUR INDUSTRY] ecosystem
+3. AI tooling for [YOUR FIELD]
+4. [INTEREST 1]
+5. [INTEREST 2]
+6. [INTEREST 3]
+7. [INTEREST 4]
 
-**Substack Feed** (orange accent)
-- Use the **Substack MCP tools** (`substack_get_feed`) to pull recent posts from my subscriptions
-- Display 4-6 posts as a 2-column grid (same format as On My Radar): emoji, linked headline, one-line summary with relevance note
-- If there are more than 6, put the rest in a collapsible "X more posts" section
+Also pull your Substack feed using `mcp__substack__substack_get_feed` (limit 10). Filter to the most relevant posts for your interests.
 
-**C — Trends to Watch** (purple accent)
-- Synthesize 2-3 emerging trends from the web search and Substack reading
-- Full-width cards with: emoji, trend name as headline, and a one-line explanation of why it matters
-- These should be patterns, not individual news items
+### STEP 2: Communications (7 sources)
 
-**D — Ideas & Opportunities** (green accent)
-- Based on everything gathered so far, suggest 2-3 actionable ideas or opportunities
-- Full-width cards with: emoji, idea name, and one-line description of what to do
-- Connect dots between news, trends, and my current projects/interests
+Check these and summarize each:
 
-**E — Personal Comms** (amber accent)
-- **Gmail**: Use Gmail tools to scan inbox. List items needing action with "Action" badges, confirmations with "OK" badges, and FYI items. Summarize promotional/newsletter volume in one italic line
-- **Google Calendar**: Use Google Calendar tools to show today's and tomorrow's events with times, locations, and any prep notes (e.g., "arrive 15 min early, bring X")
-- **iMessage**: If available, summarize any unread messages with sender and brief context
+1. **Gmail** (personal) — via Gmail MCP tools
+2. **Google Calendar** (personal) — via Google Calendar MCP tools
+3. **iMessage** — via iMessage MCP tools
+4. **Outlook inbox** (work) — via Claude in Chrome MCP. Switch to your Work Chrome profile, navigate to https://outlook.office.com, read inbox using `read_page` or `get_page_text`. Assumes auto-login on the work profile.
+5. **Outlook Calendar** (work) — via Claude in Chrome MCP. Navigate to https://outlook.office.com/calendar/view/week in the Work Chrome profile.
+6. **Slack** (work) — via Slack MCP tools
+7. **Teams** — via Claude in Chrome MCP. Navigate to https://teams.microsoft.com/v2/ in the Work Chrome profile, read recent chats/activity.
 
-**F — Work Comms** (teal accent)
-- **Outlook**: Scan work inbox for action items, FYIs, and confirmations. Badge each item. Summarize bulk/notification emails in one italic line
-- **Work Calendar**: Show the full work week's meetings with day labels and meeting counts. Badge busy days as "Heavy" and light days as "Light"
-- **Slack**: Check DMs and key channels for anything needing a response. Badge with "Input needed" or "Done" as appropriate
-- **Teams**: Summarize any unread activity. If it's just meeting recordings/notifications, note "No action" and move on
+IMPORTANT for Outlook and Teams: Use the Claude in Chrome MCP (`mcp__claude-in-chrome__*`) tools, NOT computer-use. First confirm the active Chrome profile is your Work profile. Use `switch_browser` if needed. Then use `navigate`, `read_page`, `get_page_text`, and `computer` (screenshot) tools to read content.
 
-**G — 7-Day Life Forecast** (indigo accent)
-- Build a responsive grid with one card per day for the next 7 days
-- Each day card includes:
-  - Day name + date number in a header row
-  - Weather: emoji icon + high/low temperature (use **web search** for forecast)
-  - Weather detail line (e.g., "Partly sunny", "Heavy rain")
-  - Training/outdoor recommendation tag: green "Best outdoor day" / blue "Good outdoor day" / red "Indoor day" based on weather
-  - Events from both personal and work calendars, with times and locations
-  - Alert lines for events needing prep (what to bring, travel time, etc.)
-  - An "open block" footer showing the largest free window and a suggestion for how to use it
-- Highlight today's card with a colored border
-- Highlight the best weather day with a green-accented temperature display
-- After the grid, add a "Week Ahead Summary" narrative box with subsections:
-  - **Focus Areas**: Key priorities and action items for the week
-  - **Open Windows**: Best time blocks for deep work or side projects
-  - **Heads Up**: Logistical things to remember (travel time, what to bring, deadlines)
-  - **Training Windows**: Best days/times for outdoor exercise based on weather
+### STEP 3: 7-Day Life Forecast
 
-**H — Background** (collapsible)
-- A collapsed `<details>` section for context that's relevant but not new
-- Items that were covered in previous briefs or are ongoing background trends
-- Keeps the main brief focused on what's new and actionable
+3a. Pull personal calendar (Google Calendar MCP) + work calendar (Outlook web via Chrome MCP) for the next 7 days
 
-### Footer status line
+3b. Search weather for [YOUR CITY] — 7-day forecast
 
-End with a status box listing every data source checked and its result count:
-- Web searches: X queries run
-- Gmail: checked (X unread — Y action items)
-- Google Calendar: checked (X events, 7 days)
-- Outlook: checked (X inbox, Y other)
-- Slack: checked (X threads)
-- Etc.
+3c. Combine into a week-ahead summary: calendar events, weather, training windows, open blocks, priorities, heads-up items
 
-This serves as a receipt so I know nothing was missed.
+### STEP 4: Dedup
 
-### Key principles
+Check `~/Documents/Claude Cowork/morning-brief-dedup-log.json`. Suppress stories already covered in the last 3 days. After report, update the log. Remove entries older than 7 days.
 
-1. **Relevance over completeness** — Only include items that connect to my work, projects, or interests. Skip generic news
-2. **Actionable framing** — Every item should answer "so what?" with a next step or talking point
-3. **Scannability** — Use the card grid for quick scanning, full cards only for top stories
-4. **Deduplication** — Don't repeat the same story across sections. If something appeared in Top Stories, don't also put it in On My Radar
-5. **Honest sourcing** — The status line should accurately reflect what was checked. If a tool wasn't available, say so
+### STEP 5: Assemble Sections
 
-### Customization
+- **A — Top Stories** (3 cards with emoji pairs, full paragraph + why it matters + action)
+- **B — On My Radar** (scan-grid cards, see design spec below)
+- **Substack Feed** (scan-grid cards, see design spec below)
+- **C — Trends to Watch** (scan-grid cards, see design spec below)
+- **D — Ideas & Opportunities** (scan-grid cards, see design spec below)
+- **E — Personal Comms** (Gmail, Google Calendar, iMessage — list format with traffic light badges)
+- **F — Work Comms** (Outlook inbox, Outlook calendar, Slack, Teams — list format with traffic light badges)
+- **G — 7-Day Life Forecast** (hybrid hero + mini grid layout + week-ahead narrative)
+- **H — Background / Already Covered** (collapsible)
+- **Status line** (checkmarks for each source)
 
-Adapt the sections to your own setup:
-- Swap Gmail/Outlook for whatever email you use
-- Remove Slack/Teams sections if you don't use them
-- Add or remove the Substack section based on whether you have the MCP server configured
-- Adjust the training/outdoor recommendations based on your fitness routine
-- Change the "Why it matters to you" framing to reflect your own role and interests
+### STEP 6: HTML Production
+
+Self-contained HTML file. Styles:
+
+- Deep navy header (`#1a2744`)
+- Section accent colors (red A, blue B, purple C, green D, amber E, teal F, indigo G)
+- Card shadows, responsive `max-width: 860px`
+
+#### Collapsible Sections
+
+IMPORTANT: Every section (A through H) must be collapsible using HTML `<details>` and `<summary>` elements. Use this structure for each section:
+
+```html
+<details class="section-collapse" open>
+  <summary><span class="section-label label-a">A</span> Top Stories</summary>
+  <div class="section-body">
+    <!-- section content here -->
+  </div>
+</details>
+```
+
+- Sections A, B, S (Substack), E, F, and G should default to **OPEN** (add the `open` attribute)
+- Sections C (Trends), D (Ideas), and H (Background) should default to **CLOSED** (no `open` attribute)
+- Each summary row shows a small triangle toggle that rotates on expand/collapse
+
+Required CSS for collapsible sections:
+
+```css
+details.section-collapse { background: #fff; padding: 0; border-bottom: 1px solid #e5e7eb; }
+details.section-collapse:last-of-type { border-radius: 0 0 12px 12px; border-bottom: none; }
+details.section-collapse > summary { padding: 18px 28px; cursor: pointer; list-style: none; display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 700; user-select: none; }
+details.section-collapse > summary::-webkit-details-marker { display: none; }
+details.section-collapse > summary::before { content: '\25B6'; font-size: 10px; color: #9ca3af; transition: transform .2s; flex-shrink: 0; width: 14px; }
+details.section-collapse[open] > summary::before { transform: rotate(90deg); }
+details.section-collapse > summary:hover { background: #f9fafb; }
+details.section-collapse .section-body { padding: 0 28px 24px; }
+```
+
+CRITICAL: The triangle character MUST use a single backslash CSS escape: `content: '\25B6'` — NOT double-backslash `'\\25B6'` which renders as literal text.
+
+Do NOT use `<div class="section">` with `<div class="section-title">` for sections. Use the `<details>/<summary>` pattern above instead.
+
+For section H (Background), nest a second `<details class="bg-collapse">` inside the section-body for the inner expand.
+
+#### Scan-Grid Card Design (Sections B, Substack, C, D)
+
+Two-column card grid:
+
+```css
+.scan-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+@media (max-width: 600px) { .scan-grid { grid-template-columns: 1fr; } }
+.scan-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 12px 14px; display: flex; gap: 10px; align-items: flex-start; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+.scan-card .sc-emoji { font-size: 20px; flex-shrink: 0; }
+.scan-card .sc-headline { font-size: 13px; font-weight: 700; color: #1a2744; }
+.scan-card .sc-line { font-size: 12px; color: #6b7280; }
+.scan-card.sc-full { grid-column: 1 / -1; }
+```
+
+#### Traffic Light Badges (Sections E, F)
+
+```css
+.badge { font-size: 10px; font-weight: 700; text-transform: uppercase; padding: 2px 8px; border-radius: 10px; display: inline-block; margin-left: 6px; vertical-align: middle; }
+.badge-action { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+.badge-fyi { background: #fffbeb; color: #b45309; border: 1px solid #fde68a; }
+.badge-ok { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
+```
+
+#### 7-Day Life Forecast — Hybrid Hero + Mini Grid
+
+Hero cards (today + tomorrow) with today getting purple left border. Mini 5-column grid for remaining days. Flex header with day/date left, weather right.
+
+Shared rules: best weather day highlights ONLY the weather element (`.cal-best-wx` green background). Work events use teal left-border (`.cal-ev-work`). Training tags: `.cal-train-great` (green), `.cal-train-ok` (blue), `.cal-train-bad` (red). Open blocks: green background at bottom of each cell.
+
+Save to: `~/Documents/Claude Cowork/Personal/Documents/YYYY-MM-DD_[name]-morning-brief.html`
+
+### STEP 7: iMessage Notification (optional)
+
+After the HTML brief is saved, send an iMessage to `[YOUR PHONE NUMBER]` with this format:
+
+```
+Morning Brief - [Day of week] [Mon] [Date]
+
+1. [Top calendar item with time]
+2. [Second calendar item with time]
+3. [Third calendar item with time]
+
+Full brief on your Mac. [One-line weather summary with high temp].
+```
+
+Pull the top 3 TIMED calendar items from BOTH Google Calendar and Outlook Calendar for today, sorted by start time, excluding all-day events. If fewer than 3 timed events, show what exists. Include only meetings/calls with specific start times.
+
+### STEP 8: Status Line
+
+Show checkmark/X for each data source with counts.
+
+### Tone & Style Rules
+
+- Bottom line up front. No filler.
+- Weather: always show BOTH Fahrenheit and Celsius in LOW/HIGH order (e.g. "38/52F / 3/11C")
+- Emoji pairs on Section A cards, single emojis on B/C/D
+- "Why it matters to you" on every top story
+- Actionable language throughout
+- Quick-scan depth — under 5 minutes to read
 
 ---
 
-## Tool requirements
-
-This prompt uses the following tools. Not all are required — the brief adapts to what's available:
+## Tool Requirements
 
 | Tool | Used for | Required? |
 |------|----------|-----------|
 | Web search | Top Stories, On My Radar, Trends, weather | Yes |
-| Gmail MCP | Personal email scanning | Optional |
-| Google Calendar MCP | Personal + shared calendar events | Optional |
-| Outlook (via browser) | Work email scanning | Optional |
-| Slack MCP | Work messaging | Optional |
-| Teams (via browser) | Work messaging | Optional |
-| Substack MCP | Subscription feed | Optional |
-| iMessage (via extension) | Personal messaging | Optional |
+| Gmail MCP | Personal email scanning (Section E) | Optional |
+| Google Calendar MCP | Personal calendar events (Sections E, G) | Optional |
+| Outlook via Chrome MCP | Work email + work calendar (Sections F, G) | Optional |
+| Slack MCP | Work messaging (Section F) | Optional |
+| Teams via Chrome MCP | Work messaging (Section F) | Optional |
+| Substack MCP | Subscription feed (Substack section) | Optional |
+| iMessage MCP | Personal messaging (Section E) + notification (Step 7) | Optional |
+| Claude in Chrome MCP | Browser automation for Outlook + Teams | Optional |
