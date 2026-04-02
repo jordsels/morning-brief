@@ -155,9 +155,17 @@ Shared rules: best weather day highlights ONLY the weather element (`.cal-best-w
 
 Save to: `~/Documents/Claude Cowork/Personal/Documents/YYYY-MM-DD_[name]-morning-brief.html`
 
-### STEP 7: iMessage Notification (optional)
+### STEP 7: Phone Notification (optional)
 
-After the HTML brief is saved, send an iMessage to `[YOUR PHONE NUMBER]` with this format:
+After the HTML brief is saved, send a summary to your phone. Choose one method:
+
+**Option A: iMessage** (Mac only)
+Send an iMessage to `[YOUR PHONE NUMBER]` via iMessage MCP tools. Requires running Claude Cowork on a Mac with iMessage configured.
+
+**Option B: Slack DM** (any platform)
+Send a Slack DM to yourself via Slack MCP tools. Works on Mac, Windows, Linux, iOS, and Android.
+
+Use this format for any method:
 
 ```
 Morning Brief - [Day of week] [Mon] [Date]
@@ -166,7 +174,7 @@ Morning Brief - [Day of week] [Mon] [Date]
 2. [Second calendar item with time]
 3. [Third calendar item with time]
 
-Full brief on your Mac. [One-line weather summary with high temp].
+Full brief on your Mac/desktop. [One-line weather summary with high temp].
 ```
 
 Pull the top 3 TIMED calendar items from BOTH Google Calendar and Outlook Calendar for today, sorted by start time, excluding all-day events. If fewer than 3 timed events, show what exists. Include only meetings/calls with specific start times.
@@ -197,5 +205,5 @@ Show checkmark/X for each data source with counts.
 | Slack MCP | Work messaging (Section F) | Optional |
 | Teams via Chrome MCP | Work messaging (Section F) | Optional |
 | Substack MCP | Subscription feed (Substack section) | Optional |
-| iMessage MCP | Personal messaging (Section E) + notification (Step 7) | Optional |
+| iMessage MCP | Personal messaging (Section E) + notification (Step 7, Mac only) | Optional |
 | Claude in Chrome MCP | Browser automation for Outlook + Teams | Optional |
